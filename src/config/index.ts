@@ -61,4 +61,5 @@ export default {
     password: process.env.ADMIN_PASSWORD,
     name: process.env.ADMIN_NAME,
   },
+  payment_page_link: process.env.PAYMENT_PAGE_LINK,
 }

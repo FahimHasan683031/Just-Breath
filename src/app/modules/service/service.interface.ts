@@ -1,10 +1,12 @@
 import { Types } from 'mongoose';
 
-export type ICategory = {
+export type IService = {
   _id: Types.ObjectId;
-  name: string;
-  description?: string;
+  title: string;
+  description: string;
+  price: number;
+  image?: string;
   status: boolean;
   createdAt: Date;
   updatedAt: Date;
-}
+};
