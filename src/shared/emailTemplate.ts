@@ -1,4 +1,3 @@
-
 import config from '../config'
 import { ICreateAccount, IResetPassword } from '../interfaces/emailTemplate'
 
@@ -261,7 +260,6 @@ const resendOtp = (values: {
   return data
 }
 
-
 const subscriptionActivatedEmail = ({
   user,
   plan,
@@ -371,7 +369,7 @@ const adminContactNotificationEmail = (payload: {
   message: string
 }) => {
   return {
-    to: config.super_admin.email as string, 
+    to: config.super_admin.email as string,
     subject: '📩 New Contact Form Submission – Go.Roqit',
     html: `
 <body style="margin:0; padding:0; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
@@ -607,7 +605,7 @@ const sendPaymentLinkEmail = ({
         <!-- Notes Box -->
         <div style="background:#f1f8f4; padding:15px 18px; border-radius:12px; border-left:4px solid #3CB371; margin-top:25px;">
           <p style="margin:0; color:#444; font-size:14px;">
-            💬 <strong>Notes:</strong> ${data.additionalNotes || "No additional notes"}
+            💬 <strong>Notes:</strong> ${data.additionalNotes || 'No additional notes'}
           </p>
         </div>
 
@@ -642,7 +640,180 @@ const sendPaymentLinkEmail = ({
   }
 }
 
+const sendPaymentConfirmationEmail = (data: any) => {
+  return {
+    to: data.email,
+    subject: `✅ Payment Confirmed – ${data.serviceType.title}`,
+    html: `
+<body style="margin:0; padding:0; font-family:'Inter','Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#f7f7f7;">
+  <table width="100%" cellpadding="0" cellspacing="0"
+         style="max-width:640px; margin:40px auto; background:#ffffff; border-radius:16px;
+                overflow:hidden; border:1px solid #e5e5e5; box-shadow:0 4px 20px rgba(0,0,0,0.06);">
 
+    <!-- Header -->
+    <tr>
+      <td align="center" style="background:#2c2c2c; padding:35px 20px; border-bottom:1px solid #d9f3e4;">
+        <img src="https://i.ibb.co.com/jks76tpB/8a6289d738dfae4e5ecc32ab7b4cd261fd2b5e71.png"
+             alt="Just Breath Logo"
+             style="height:85px; width:auto; margin-bottom:10px;" />
+        <h1 style="color:#3cb371; font-size:24px; font-weight:700; margin:0;">
+          Payment Successfully Completed
+        </h1>
+      </td>
+    </tr>
+
+    <!-- Body -->
+    <tr>
+      <td style="padding:40px;">
+        <p style="color:#444; font-size:15px; line-height:1.7; text-align:center;">
+          Hello <strong style="color:#3CB371;">${data.fullName}</strong>,  
+          your payment for <strong>${data.serviceType.title}</strong> has been successfully completed. 💚
+        </p>
+
+        <!-- Service Summary -->
+        <h2 style="color:#3CB371; font-size:19px; margin-bottom:15px; margin-top:30px;">🧾 Service Details</h2>
+        <table style="width:100%; border-collapse:collapse;">
+          <tr>
+            <td style="padding:8px 0; color:#666; font-size:15px;">Service Type:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">${data.serviceType.title}</td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Preferred Date:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">
+              ${new Date(data.preferredDateTime).toLocaleString('en-US')}
+            </td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Address:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">${data.serviceAddress}</td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Total Paid:</td>
+            <td style="padding:8px 0; color:#3CB371; font-weight:700; text-align:right;">
+              £${data.serviceType.price}
+            </td>
+          </tr>
+        </table>
+
+        <!-- Notes -->
+        <div style="background:#f1f8f4; padding:15px 18px; border-radius:12px; border-left:4px solid #3CB371; margin-top:25px;">
+          <p style="margin:0; color:#444; font-size:14px;">
+            💬 <strong>Notes:</strong> ${data.additionalNotes || 'No additional notes'}
+          </p>
+        </div>
+
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td align="center" style="background:#f9f9f9; padding:22px; border-top:1px solid #e6e6e6;">
+        <p style="margin:0; color:#777; font-size:12px;">
+          © ${new Date().getFullYear()} — Just Breath Services
+        </p>
+        <p style="margin:5px 0 0; color:#777; font-size:12px;">
+          Built with 💚 for your comfort
+        </p>
+      </td>
+    </tr>
+
+  </table>
+</body>
+    `,
+  }
+}
+
+const sendAdminPaymentNotificationEmail = (data: any) => {
+  return {
+    to: config.super_admin.email as string,
+    subject: `💡 Payment Completed by ${data.fullName} – ${data.serviceType.title}`,
+    html: `
+<body style="margin:0; padding:0; font-family:'Inter','Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#f7f7f7;">
+  <table width="100%" cellpadding="0" cellspacing="0"
+         style="max-width:640px; margin:40px auto; background:#ffffff; border-radius:16px;
+                overflow:hidden; border:1px solid #e5e5e5; box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+
+    <!-- Header -->
+    <tr>
+      <td align="center" style="background:#2c2c2c; padding:35px 20px; border-bottom:1px solid #d9f3e4;">
+        <img src="https://i.ibb.co.com/jks76tpB/8a6289d738dfae4e5ecc32ab7b4cd261fd2b5e71.png"
+             alt="Just Breath Logo"
+             style="height:85px; width:auto; margin-bottom:10px;" />
+        <h1 style="color:#3cb371; font-size:24px; font-weight:700; margin:0;">
+          Payment Completed Notification
+        </h1>
+      </td>
+    </tr>
+
+    <!-- Body -->
+    <tr>
+      <td style="padding:40px;">
+        <p style="color:#444; font-size:15px; line-height:1.7; text-align:center;">
+          <strong style="color:#3CB371;">${data.fullName}</strong> has completed the payment for <strong>${data.serviceType.title}</strong>.
+        </p>
+
+        <!-- Service Summary -->
+        <h2 style="color:#3CB371; font-size:19px; margin-bottom:15px; margin-top:30px;">🧾 Service Details</h2>
+        <table style="width:100%; border-collapse:collapse;">
+          <tr>
+            <td style="padding:8px 0; color:#666; font-size:15px;">Customer Name:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">${data.fullName}</td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Email:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">${data.email}</td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Phone:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">${data.phone}</td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Service Type:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">${data.serviceType.title}</td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Preferred Date:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">
+              ${new Date(data.preferredDateTime).toLocaleString('en-US')}
+            </td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Address:</td>
+            <td style="padding:8px 0; color:#222; text-align:right;">${data.serviceAddress}</td>
+          </tr>
+          <tr style="border-top:1px solid #e8e8e8;">
+            <td style="padding:8px 0; color:#666;">Total Paid:</td>
+            <td style="padding:8px 0; color:#3CB371; font-weight:700; text-align:right;">£${data.serviceType.price}</td>
+          </tr>
+        </table>
+
+        <!-- Notes -->
+        <div style="background:#f1f8f4; padding:15px 18px; border-radius:12px; border-left:4px solid #3CB371; margin-top:25px;">
+          <p style="margin:0; color:#444; font-size:14px;">
+            💬 <strong>Notes:</strong> ${data.additionalNotes || 'No additional notes'}
+          </p>
+        </div>
+
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td align="center" style="background:#f9f9f9; padding:22px; border-top:1px solid #e6e6e6;">
+        <p style="margin:0; color:#777; font-size:12px;">
+          © ${new Date().getFullYear()} — Just Breath Services
+        </p>
+        <p style="margin:5px 0 0; color:#777; font-size:12px;">
+          Built with 💚 for your comfort
+        </p>
+      </td>
+    </tr>
+
+  </table>
+</body>
+    `,
+  }
+}
 
 export const emailTemplate = {
   createAccount,
@@ -652,4 +823,6 @@ export const emailTemplate = {
   userContactConfirmationEmail,
   adminContactNotificationEmail,
   sendPaymentLinkEmail,
+  sendPaymentConfirmationEmail,
+  sendAdminPaymentNotificationEmail,
 }

@@ -12,6 +12,10 @@ import handleStripeWebhook from './app/modules/payment/handleStripeWebhook'
 //application
 const app = express();
 
+app.use('/webhook',
+    express.raw({ type: 'application/json' }),
+    handleStripeWebhook
+);
 
 const allowedOrigins = [
   'https://goroqit.com',
@@ -35,10 +39,7 @@ app.use(cors({
 }));
 
 // Stripe webhook route
-app.use('/webhook',
-    express.raw({ type: 'application/json' }),
-    handleStripeWebhook
-);
+
 
 
 //morgan

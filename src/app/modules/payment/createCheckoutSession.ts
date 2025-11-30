@@ -42,6 +42,7 @@ export const createCheckoutSession = async (quoteId: string) => {
     cancel_url: `${config.stripe.frontendUrl}/payments/cancel`,
     metadata: {
       quote_id: String(quote._id),
+      service: service.title,
     },
   };
 
@@ -49,3 +50,6 @@ export const createCheckoutSession = async (quoteId: string) => {
 
   return session.url;
 };
+
+
+
