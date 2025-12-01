@@ -13,6 +13,11 @@ const PaymentSchema = new Schema<IPayment>(
       type: Date,
       required: true,
     },
+    quoteId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Quote',
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,

@@ -141,9 +141,7 @@ const createUserZodSchema = z.object({
     role: z.enum(
       [
         USER_ROLES.ADMIN,
-        USER_ROLES.USER,
         USER_ROLES.GUEST,
-        USER_ROLES.CUSTOMER,
       ],
       {
         message: 'Role must be one of admin, user, guest',

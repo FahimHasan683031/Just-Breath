@@ -26,16 +26,8 @@ router.post(
   PassportAuthController.login,
 )
 
-router.get(
-  '/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] }),
-)
 
-router.get(
-  '/google/callback',
-  passport.authenticate('google', { session: false }),
-  PassportAuthController.googleAuthCallback,
-)
+
 
 router.post(
   '/verify-account',
@@ -64,9 +56,7 @@ router.post(
   '/resend-otp',
   tempAuth(
     USER_ROLES.ADMIN,
-    USER_ROLES.USER,
     USER_ROLES.GUEST,
-    USER_ROLES.CUSTOMER,
   ),
   validateRequest(AuthValidations.resendOtpZodSchema),
   CustomAuthController.resendOtp,
@@ -74,19 +64,14 @@ router.post(
 
 router.post(
   '/change-password',
-  auth(USER_ROLES.ADMIN, USER_ROLES.USER, USER_ROLES.GUEST),
+  auth(USER_ROLES.ADMIN, USER_ROLES.GUEST),
   validateRequest(AuthValidations.changePasswordZodSchema),
   CustomAuthController.changePassword,
 )
 
-router.delete(
-  '/delete-account',
-  auth(USER_ROLES.ADMIN, USER_ROLES.USER, USER_ROLES.GUEST),
-  validateRequest(AuthValidations.deleteAccount),
-  CustomAuthController.deleteAccount,
-)
+
 router.post('/refresh-token', CustomAuthController.getRefreshToken)
 
-router.post('/social-login', validateRequest(AuthValidations.socialLoginZodSchema), CustomAuthController.socialLogin)
+
 
 export const AuthRoutes = router

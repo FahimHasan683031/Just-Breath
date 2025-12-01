@@ -1,8 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 import ApiError from '../../../errors/ApiError'
-import { IContact, IFaq, IPublic } from './public.interface'
-import { Contact, Faq, Public } from './public.model'
-
+import { IContact,IPublic } from './public.interface'
+import { Contact, Public } from './public.model'
 import { User } from '../user/user.model'
 import { emailHelper } from '../../../helpers/emailHelper'
 import QueryBuilder from '../../builder/QueryBuilder'
@@ -24,16 +23,10 @@ const createPublic = async (payload: IPublic) => {
         new: true,
       },
     )
-    //store the result in redis
-    // redisClient.del(payload.type === 'privacy-policy' ? `public:${RedisKeys.PRIVACY_POLICY}` : `public:${RedisKeys.TERMS_AND_CONDITION}`)
-    // redisClient.setex(payload.type === 'privacy-policy' ? `public:${RedisKeys.PRIVACY_POLICY}` : `public:${RedisKeys.TERMS_AND_CONDITION}`, 60 * 60 * 24, JSON.stringify(isExist))
   } else {
     const result = await Public.create(payload)
     if (!result)
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create Public')
-    //store the result in redis
-    // redisClient.del(payload.type === 'privacy-policy' ? `public:${RedisKeys.PRIVACY_POLICY}` : `public:${RedisKeys.TERMS_AND_CONDITION}`)
-    // redisClient.setex(payload.type === 'privacy-policy' ? `public:${RedisKeys.PRIVACY_POLICY}` : `public:${RedisKeys.TERMS_AND_CONDITION}`, 60 * 60 * 24, JSON.stringify(result))
   }
 
   return `${payload.type} created successfully}`
@@ -42,13 +35,8 @@ const createPublic = async (payload: IPublic) => {
 const getAllPublics = async (
   type: 'privacy-policy' | 'terms-and-condition',
 ) => {
-  // const cachedResult = await redisClient.get(type === 'privacy-policy' ? `public:${RedisKeys.PRIVACY_POLICY}` : `public:${RedisKeys.TERMS_AND_CONDITION}`)
-  // if (cachedResult) {
-  //   return JSON.parse(cachedResult)
-  // }
   const result = await Public.findOne({ type: type }).lean()
-  //store the result in redis
-  // redisClient.setex(type === 'privacy-policy' ? `public:${RedisKeys.PRIVACY_POLICY}` : `public:${RedisKeys.TERMS_AND_CONDITION}`, 60 * 60 * 24, JSON.stringify(result))
+
   return result || null
 }
 
@@ -72,14 +60,14 @@ const createContact = async (payload: IContact) => {
     const result = await Contact.create(payload)
     if (!result)
       throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create Contact')
-    // send admin email
-    await emailHelper.sendEmail(
-      emailTemplate.adminContactNotificationEmail(payload),
-    )
-    // send user email
-    await emailHelper.sendEmail(
-      emailTemplate.userContactConfirmationEmail(payload),
-    )
+    setTimeout(() => {
+      // send admin email
+      emailHelper.sendEmail(
+        emailTemplate.adminContactNotificationEmail(payload),
+      )
+      // send user email
+      emailHelper.sendEmail(emailTemplate.userContactConfirmationEmail(payload))
+    }, 0)
 
     return {
       message: 'Contact form submitted successfully',
@@ -109,56 +97,12 @@ const getAllContacts = async (query: Record<string, unknown>) => {
   }
 }
 
-const createFaq = async (payload: IFaq) => {
-  const result = await Faq.create(payload)
-  if (!result)
-    throw new ApiError(StatusCodes.BAD_REQUEST, 'Failed to create Faq')
-  // redisClient.del(`public:${RedisKeys.FAQ}`)
-  return result
-}
 
-const getAllFaqs = async () => {
-  // const cachedResult = await redisClient.get(`public:${RedisKeys.FAQ}`)
-  // if (cachedResult) {
-  // return JSON.parse(cachedResult)
-  // }
-  const result = await Faq.find({})
-  // redisClient.setex(`public:${RedisKeys.FAQ}`, 60 * 60 * 24, JSON.stringify(result))
-  return result || []
-}
-
-const getSingleFaq = async (id: string) => {
-  const result = await Faq.findById(id)
-  return result || null
-}
-
-const updateFaq = async (id: string, payload: Partial<IFaq>) => {
-  const result = await Faq.findByIdAndUpdate(
-    id,
-    { $set: payload },
-    {
-      new: true,
-    },
-  )
-  // redisClient.del(`public:${RedisKeys.FAQ}`)
-  return result
-}
-
-const deleteFaq = async (id: string) => {
-  const result = await Faq.findByIdAndDelete(id)
-  // redisClient.del(`public:${RedisKeys.FAQ}`)
-  return result
-}
 
 export const PublicServices = {
   createPublic,
   getAllPublics,
   deletePublic,
   createContact,
-  createFaq,
-  getAllFaqs,
-  getSingleFaq,
-  updateFaq,
-  deleteFaq,
-  getAllContacts,
+  getAllContacts
 }

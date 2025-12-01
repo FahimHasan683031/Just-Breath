@@ -35,7 +35,7 @@ router.route("/:id")
 
   // send payment link
   router.post(
-    "/:id/send-payment-link",
+    "/send-payment-link/:id",
     QuoteController.sendPaymentLinkController
   );
 

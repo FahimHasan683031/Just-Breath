@@ -5,7 +5,6 @@ import { Service } from '../service/service.model'
 import ApiError from '../../../errors/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import { emailTemplate } from '../../../shared/emailTemplate'
-import { Query } from 'mongoose'
 import { emailHelper } from '../../../helpers/emailHelper'
 import config from '../../../config'
 
@@ -20,13 +19,24 @@ const createQuote = async (payload: Partial<IQuote>) => {
   }
 
   const quote = await Quote.create(payload)
+
+  setTimeout(() => {
+    const adminEmailTemplate = emailTemplate.sendAdminNewQuoteEmail(
+      quote,
+      service,
+    )
+    emailHelper.sendEmail(adminEmailTemplate)
+  }, 0)
   return quote
 }
 
 // get quotes
 const getQuotes = async (query: Record<string, unknown>) => {
-  const quoteQueryBuilder = new QueryBuilder(Quote.find().populate('serviceType'), query)
-    .search([ 'fullName', 'email','phone','serviceType.title'])
+  const quoteQueryBuilder = new QueryBuilder(
+    Quote.find().populate('serviceType'),
+    query,
+  )
+    .search(['fullName', 'email', 'phone', 'serviceType.title'])
     .filter()
     .sort()
     .paginate()
@@ -96,12 +106,15 @@ const sendPaymentLink = async (id: string) => {
   if (!quote) {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Quote not found')
   }
+// email send
+  setTimeout(() => {
+    const paymentLinkEmailTemplate = emailTemplate.sendPaymentLinkEmail({
+      data: quote,
+      paymentUrl: `${config.payment_page_link}?quoteId=${id}`,
+    })
+    emailHelper.sendEmail(paymentLinkEmailTemplate)
+  }, 0)
 
-  const paymentLinkEmailTemplate = emailTemplate.sendPaymentLinkEmail({
-    data: quote,
-    paymentUrl: `${config.payment_page_link}?quoteId=${id}`,
-  })
-  await emailHelper.sendEmail(paymentLinkEmailTemplate)
   if (quote.status === 'pending') {
     await Quote.findByIdAndUpdate(id, { status: 'paymentMailSended' })
   }

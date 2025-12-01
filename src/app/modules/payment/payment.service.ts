@@ -3,7 +3,7 @@ import { createCheckoutSession } from "./createCheckoutSession"
 import { IPayment } from "./payment.interface";
 import { Payment } from "./payment.model";
 
-
+// Create seassion
 const creatSession = async ( quoteId:string,) => {
 const url = await createCheckoutSession(quoteId)
 
@@ -34,7 +34,7 @@ const getPayments = async (query: Record<string, unknown>) => {
 
 // get payment by id
 const getPaymentById = async (id: string) => {
-  const payment = await Payment.findById(id);
+  const payment = await Payment.findById(id).populate('quoteId');
   return payment;
 };
 

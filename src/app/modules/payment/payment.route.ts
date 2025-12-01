@@ -10,5 +10,15 @@ router.post(
     PaymentController.createCheckoutSession
 )
 
+router.get(
+    "/",
+    PaymentController.getPaymentsController
+)
+router.get(
+    "/:id",
+    PaymentController.getPaymentByIdController
+)
+
+
 
 export const PaymentRouts =router;
