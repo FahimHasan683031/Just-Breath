@@ -11,22 +11,23 @@ import { createServiceValidationSchema, updateServiceValidationSchema } from "./
 import validateRequest from "../../middleware/validateRequest";
 import auth from "../../middleware/auth";
 import { fileAndBodyProcessorUsingDiskStorage } from "../../middleware/processReqBody";
+import { USER_ROLES } from "../../../enum/user";
 
 const router = express.Router();
 
 router.route("/")
   .post(
-    // auth('admin'),
-    
+    auth(USER_ROLES.ADMIN),
     fileAndBodyProcessorUsingDiskStorage(),
     validateRequest(createServiceValidationSchema),
     createServiceController
   )
   .get(
+    auth(USER_ROLES.ADMIN),
     getServicesController
   );
 
-router.route("/")
+router.route("/active")
   .get(
     getActiveServicesController
   );
@@ -36,13 +37,13 @@ router.route("/:id")
     getServiceByIdController
   )
   .patch(
-    // auth('admin'),
+    auth(USER_ROLES.ADMIN),
     fileAndBodyProcessorUsingDiskStorage(),
     validateRequest(updateServiceValidationSchema),
     updateServiceController
   )
   .delete(
-    // auth('admin'),
+    auth(USER_ROLES.ADMIN),
     deleteServiceController
   );
 

@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { PaymentController } from "./payment.controller";
+import auth from "../../middleware/auth";
+import { USER_ROLES } from "../../../enum/user";
 
 const router = Router();
 
@@ -12,10 +14,12 @@ router.post(
 
 router.get(
     "/",
+    auth(USER_ROLES.ADMIN),
     PaymentController.getPaymentsController
 )
 router.get(
     "/:id",
+    auth(USER_ROLES.ADMIN),
     PaymentController.getPaymentByIdController
 )
 

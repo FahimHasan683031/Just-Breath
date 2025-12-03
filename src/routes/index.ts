@@ -5,6 +5,7 @@ import { UserRoutes } from '../app/modules/user/user.route'
 import { QuoteRoutes } from '../app/modules/quote/quote.route'
 import { ServiceRoutes } from '../app/modules/service/service.route'
 import { PaymentRouts } from '../app/modules/payment/payment.route'
+import { DashboardRoutes } from '../app/modules/dashboard/dashboard.route'
 
 const router = express.Router()
 
@@ -16,6 +17,7 @@ const apiRoutes: { path: string; route: Router }[] = [
   { path: '/quote', route: QuoteRoutes },
   { path: '/service', route: ServiceRoutes },
   { path: '/payment', route: PaymentRouts },
+  { path: '/dashboard', route: DashboardRoutes},
 
 ]
 
