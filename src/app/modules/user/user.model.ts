@@ -1,138 +1,101 @@
-import { Schema, model } from 'mongoose'
-import { IUser, UserModel } from './user.interface'
-import { USER_ROLES, USER_STATUS } from '../../../enum/user'
-import ApiError from '../../../errors/ApiError'
-import { StatusCodes } from 'http-status-codes'
-import config from '../../../config'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
+import { StatusCodes } from 'http-status-codes';
+import { model, Schema } from 'mongoose';
+import config from '../../../config';
+import ApiError from '../../../errors/ApiError';
+import { IUser, UserModal } from './user.interface';
+import { USER_ROLES } from '../../../enum/user';
 
-const userSchema = new Schema<IUser, UserModel>(
+const userSchema = new Schema<IUser, UserModal>(
   {
     name: {
       type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: Object.values(USER_ROLES),
+      required: true,
     },
     email: {
       type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
     },
-    phone: {
+    password: {
       type: String,
+      required: true,
+      select: 0,
+      minlength: 8,
+    },
+    image: {
+      type: String,
+      default: 'https://i.ibb.co/z5YHLV9/profile.png',
     },
     status: {
       type: String,
-      enum: [USER_STATUS.ACTIVE, USER_STATUS.RESTRICTED, USER_STATUS.DELETED],
-      default: USER_STATUS.ACTIVE,
+      enum: ['active', 'delete'],
+      default: 'active',
     },
     verified: {
       type: Boolean,
       default: false,
     },
-    profile: {
-      type: String,
-    },
-    password: {
-      type: String,
-      required: true,
-      select: false,
-    },
-    role: {
-      type: String,
-      default: USER_ROLES.USER,
-    },
-    address: {
-      type: String,
-    },
-    location: {
-      type: {
-        type: String,
-        default: 'Point',
-        enum: ['Point'],
-      },
-      coordinates: {
-        type: [Number],
-        default: [0.0, 0.0], // [longitude, latitude]
-      },
-    },
-    appId: {
-      type: String,
-    },
-    deviceToken: {
-      type: String,
-    },
     authentication: {
-      _id: false,
-      select: false,
       type: {
-        restrictionLeftAt: {
-          type: Date,
-          default: null,
-        },
-        resetPassword: {
+        isResetPassword: {
           type: Boolean,
           default: false,
         },
-        wrongLoginAttempts: {
-          type: Number,
-          default: 0,
-        },
-        passwordChangedAt: {
-          type: Date,
-          default: null,
-        },
         oneTimeCode: {
-          type: String,
-          default: null,
-        },
-        latestRequestAt: {
-          type: Date,
-          default: null,
-        },
-        expiresAt: {
-          type: Date,
-          default: null,
-        },
-        requestCount: {
           type: Number,
-          default: 0,
+          default: null,
         },
-        authType: {
-          type: String,
+        expireAt: {
+          type: Date,
           default: null,
         },
       },
+      select: 0,
     },
   },
-  {
-    timestamps: true,
-  },
-)
+  { timestamps: true }
+);
 
-userSchema.index({ location: '2dsphere' })
+//exist user check
+userSchema.statics.isExistUserById = async (id: string) => {
+  const isExist = await User.findById(id);
+  return isExist;
+};
 
-userSchema.statics.isPasswordMatched = async function (
-  givenPassword: string,
-  savedPassword: string,
-): Promise<boolean> {
-  return await bcrypt.compare(givenPassword, savedPassword)
-}
+userSchema.statics.isExistUserByEmail = async (email: string) => {
+  const isExist = await User.findOne({ email });
+  return isExist;
+};
 
-userSchema.pre<IUser>('save', async function (next) {
-  //find the user by email
-  const isExist = await User.findOne({
-    email: this.email,
-    status: { $in: [USER_STATUS.ACTIVE, USER_STATUS.RESTRICTED] },
-  })
+//is match password
+userSchema.statics.isMatchPassword = async (
+  password: string,
+  hashPassword: string
+): Promise<boolean> => {
+  return await bcrypt.compare(password, hashPassword);
+};
+
+//make password secure
+userSchema.pre('save', async function (next) {
+  //check user
+  const isExist = await User.findOne({ email: this.email });
   if (isExist) {
-    throw new ApiError(
-      StatusCodes.BAD_REQUEST,
-      'An account with this email already exists',
-    )
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'Email already exist!');
   }
 
+  //password hash
   this.password = await bcrypt.hash(
     this.password,
-    Number(config.bcrypt_salt_rounds),
-  )
-  next()
-})
+    Number(config.bcrypt_salt_rounds)
+  );
+  next();
+});
 
-export const User = model<IUser, UserModel>('User', userSchema)
+export const User = model<IUser, UserModal>('User', userSchema);

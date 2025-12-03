@@ -5,7 +5,6 @@ import router from './routes'
 import { Morgan } from './shared/morgan'
 import cookieParser from 'cookie-parser'
 import globalErrorHandler from './app/middleware/globalErrorHandler'
-import passport from './app/modules/auth/passport.auth/config/passport'
 import handleStripeWebhook from './app/modules/payment/handleStripeWebhook'
 
 
@@ -47,7 +46,6 @@ app.use(Morgan.successHandler)
 app.use(Morgan.errorHandler)
 //body parser
 app.use(express.json())
-app.use(passport.initialize())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 //file retrieve

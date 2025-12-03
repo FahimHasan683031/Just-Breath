@@ -1,4 +1,4 @@
-import { IService } from '../app/modules/service/service.interface';
+import { IService } from '../app/modules/service/service.interface'
 import config from '../config'
 import { ICreateAccount, IResetPassword } from '../interfaces/emailTemplate'
 
@@ -7,16 +7,21 @@ const createAccount = (values: ICreateAccount) => {
     to: values.email,
     subject: `Verify your account, ${values.name}`,
     html: `
-<body style="margin:0; padding:0;  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+<body style="margin:0; padding:0; font-family:'Inter','Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#f7f7f7;">
   <table width="100%" cellpadding="0" cellspacing="0"
-         style="max-width:640px; margin:40px auto; background:#1e293b; border-radius:16px;
-                overflow:hidden; box-shadow:0 6px 28px rgba(0,0,0,0.35); color:#e2e8f0;">
+         style="max-width:640px; margin:40px auto; background:#ffffff; border-radius:16px;
+                overflow:hidden; border:1px solid #e5e5e5; box-shadow:0 4px 20px rgba(0,0,0,0.06);">
 
     <!-- Header -->
     <tr>
-      <td align="center" style="background:#2c2c2c; padding:32px 20px;">
-        <img src="https://i.ibb.co.com/jks76tpB/8a6289d738dfae4e5ecc32ab7b4cd261fd2b5e71.png" alt="Just Breath Logo"
-             style="width:180px; height:auto; filter:drop-shadow(0 0 10px rgba(255,255,255,0.45));">
+      <td align="center" style="background:#2c2c2c; padding:35px 20px; border-bottom:1px solid #d9f3e4;">
+        <img src="https://i.ibb.co.com/jks76tpB/8a6289d738dfae4e5ecc32ab7b4cd261fd2b5e71.png" 
+             alt="Just Breath Logo"
+             style="height:85px; width:auto; margin-bottom:10px;" />
+
+        <h1 style="color:#3cb371; font-size:24px; font-weight:700; margin:0;">
+          Verify Your Email
+        </h1>
       </td>
     </tr>
 
@@ -24,45 +29,56 @@ const createAccount = (values: ICreateAccount) => {
     <tr>
       <td style="padding:40px 45px;">
 
-        <h1 style="color:#38bdf8; font-size:26px; font-weight:700; margin-bottom:18px; text-align:center;">
-          Verify Your Email ✨
-        </h1>
-
-        <p style="color:#cbd5e1; font-size:16px; line-height:1.6; margin-bottom:28px; text-align:center;">
-          Hi <strong style="color:#fff;">${values.name}</strong>,<br>
-          Welcome to <strong style="color:#38bdf8;">Just Breath</strong>!  
-          Please enter the verification code below to activate your account.
+        <p style="color:#444; font-size:16px; text-align:center; line-height:1.6;">
+          Hi <strong style="color:#3CB371;">${values.name}</strong>,<br>
+          Welcome to <strong>Just Breath</strong>!  
+          Please use the verification code below to activate your account.
         </p>
 
         <!-- OTP Box -->
-        <div style="background:linear-gradient(135deg,#0ea5e9,#38bdf8); border:2px solid #7dd3fc;
-                    border-radius:14px; padding:25px 0; text-align:center; margin:32px auto;
-                    max-width:320px; box-shadow:0 4px 14px rgba(56,189,248,0.35);">
-          <span style="font-size:42px; font-weight:700; color:#0f172a; letter-spacing:6px;">
+        <div style="
+          background:#f1f8f4;
+          border-left:4px solid #3CB371;
+          border-radius:14px;
+          padding:30px 0;
+          text-align:center;
+          margin:32px auto;
+          max-width:320px;
+          box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+
+          <span style="font-size:42px; font-weight:700; color:#2c2c2c; letter-spacing:6px;">
             ${values.otp}
           </span>
         </div>
 
-        <p style="color:#cbd5e1; font-size:15px; line-height:1.6; text-align:center;">
-          This code is valid for <strong style="color:#fff;">5 minutes</strong>.<br>
-          If you did not request this, please ignore it.
+        <p style="color:#555; font-size:15px; line-height:1.6; text-align:center;">
+          This code is valid for <strong>5 minutes</strong>.<br>
+          If you didn’t request this, you can safely ignore it.
         </p>
 
         <!-- Security Warning -->
-        <div style="margin-top:35px; background:#334155; border-left:6px solid #38bdf8;
+        <div style="margin-top:35px; background:#f9f9f9; border-left:6px solid #3CB371;
                     border-radius:8px; padding:16px 18px;">
-          <p style="margin:0; color:#e2e8f0; font-size:14px;">
-            🔒 Your security matters. Never share this code with anyone.
+          <p style="margin:0; color:#444; font-size:14px;">
+            🔒 For your security, do not share this verification code with anyone.
           </p>
         </div>
 
         <!-- Button -->
         <div style="text-align:center; margin-top:45px;">
           <a href="https://justbreath.com/otp-verify"
-             style="background:#38bdf8; color:#0f172a; padding:14px 34px; font-size:16px; 
-                    font-weight:700; border-radius:12px; text-decoration:none; display:inline-block;
-                    box-shadow:0 4px 14px rgba(56,189,248,0.35); transition:0.3s;">
-            Open Just Breath 🌬️
+             style="
+               background:#3CB371;
+               color:#fff;
+               padding:14px 34px;
+               font-size:16px;
+               font-weight:700;
+               border-radius:12px;
+               text-decoration:none;
+               display:inline-block;
+               box-shadow:0 4px 14px rgba(60,179,113,0.35);
+               transition:0.3s;">
+            Verify Account
           </a>
         </div>
 
@@ -71,12 +87,12 @@ const createAccount = (values: ICreateAccount) => {
 
     <!-- Footer -->
     <tr>
-      <td align="center" style="background:#0f172a; padding:26px 20px;">
-        <p style="margin:0; color:#64748b; font-size:13px;">
-          © ${new Date().getFullYear()} <strong style="color:#e2e8f0;">Just Breath</strong>. All rights reserved.
+      <td align="center" style="background:#f9f9f9; padding:22px; border-top:1px solid #e6e6e6;">
+        <p style="margin:0; color:#777; font-size:12px;">
+          © ${new Date().getFullYear()} — Just Breath Services
         </p>
-        <p style="margin:6px 0 0; color:#64748b; font-size:13px;">
-          Powered by <strong style="color:#38bdf8;">Just Breath API</strong> 💙
+        <p style="margin:5px 0 0; color:#777; font-size:12px;">
+          Built with 💚 for your comfort
         </p>
       </td>
     </tr>
@@ -84,10 +100,9 @@ const createAccount = (values: ICreateAccount) => {
   </table>
 </body>
     `,
-  };
-  return data;
-};
-
+  }
+  return data
+}
 
 const resetPassword = (values: IResetPassword) => {
   const data = {
@@ -96,14 +111,15 @@ const resetPassword = (values: IResetPassword) => {
     html: `
 <body style="margin:0; padding:0;  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0"
-         style="max-width:640px; margin:40px auto; background:#1e293b; border-radius:16px;
-                overflow:hidden; box-shadow:0 6px 28px rgba(0,0,0,0.35); color:#e2e8f0;">
+         style="max-width:640px; margin:40px auto; background:#ffffff; border-radius:16px;
+                overflow:hidden; box-shadow:0 6px 28px rgba(0,0,0,0.15); color:#2c2c2c; border:1px solid #e5e5e5;">
     
     <!-- Header -->
     <tr>
       <td align="center" style="background:#2c2c2c; padding:32px 20px;">
-        <img src="https://i.ibb.co.com/jks76tpB/8a6289d738dfae4e5ecc32ab7b4cd261fd2b5e71.png" alt="Just Breath Logo"
-             style="width:180px; height:auto; filter:drop-shadow(0 0 10px rgba(255,255,255,0.45));">
+        <img src="https://i.ibb.co.com/jks76tpB/8a6289d738dfae4e5ecc32ab7b4cd261fd2b5e71.png" 
+             alt="Just Breath Logo"
+             style="width:150px; height:auto;">
       </td>
     </tr>
 
@@ -111,35 +127,35 @@ const resetPassword = (values: IResetPassword) => {
     <tr>
       <td style="padding:40px 45px;">
         
-        <h1 style="color:#38bdf8; font-size:26px; font-weight:700; margin-bottom:20px; text-align:center;">
+        <h1 style="color:#3CB371; font-size:26px; font-weight:700; margin-bottom:20px; text-align:center;">
           Password Reset Request 🔐
         </h1>
 
-        <p style="color:#cbd5e1; font-size:16px; line-height:1.7; margin-bottom:28px; text-align:center;">
-          Hi <strong style="color:#fff;">${values.name}</strong>,<br>
-          We received a request to reset the password for your
-          <strong style="color:#38bdf8;">Just Breath</strong> account.<br>
-          Please use the verification code below to complete your password reset:
+        <p style="color:#444; font-size:16px; line-height:1.7; margin-bottom:28px; text-align:center;">
+          Hi <strong>${values.name}</strong>,<br>
+          We received a request to reset your 
+          <strong style="color:#3CB371;">Just Breath</strong> account password.<br>
+          Please use the code below to continue:
         </p>
 
         <!-- OTP Box -->
-        <div style="background:linear-gradient(135deg,#0ea5e9,#38bdf8); border:2px solid #7dd3fc;
+        <div style="background:#eaf7f0; border:2px solid #3CB371;
                     border-radius:14px; padding:25px 0; text-align:center; margin:32px auto;
-                    max-width:320px; box-shadow:0 4px 14px rgba(56,189,248,0.35);">
-          <span style="font-size:42px; font-weight:700; color:#0f172a; letter-spacing:6px;">
+                    max-width:320px; box-shadow:0 4px 14px rgba(60,179,113,0.25);">
+          <span style="font-size:42px; font-weight:700; color:#2c2c2c; letter-spacing:6px;">
             ${values.otp}
           </span>
         </div>
 
-        <p style="color:#cbd5e1; font-size:15px; line-height:1.6; text-align:center;">
-          This code is valid for <strong style="color:#fff;">5 minutes</strong>.<br>
-          If you didn’t request a password reset, you can safely ignore this email.
+        <p style="color:#555; font-size:15px; line-height:1.6; text-align:center;">
+          This code is valid for <strong>5 minutes</strong>.<br>
+          If you didn’t request this, you can safely ignore this email.
         </p>
 
         <!-- Security Box -->
-        <div style="margin-top:35px; background:#334155; border-left:6px solid #38bdf8;
+        <div style="margin-top:35px; background:#f1f8f4; border-left:6px solid #3CB371;
                     border-radius:8px; padding:16px 18px;">
-          <p style="margin:0; color:#e2e8f0; font-size:14px;">
+          <p style="margin:0; color:#444; font-size:14px;">
             ⚠️ <strong>Security Tip:</strong> Never share your reset code with anyone.  
             Just Breath will never ask for it.
           </p>
@@ -148,9 +164,9 @@ const resetPassword = (values: IResetPassword) => {
         <!-- Button -->
         <div style="text-align:center; margin-top:45px;">
           <a href="https://justbreath.com/otp-verify" target="_blank"
-             style="background:#38bdf8; color:#0f172a; padding:14px 34px; font-size:16px; 
+             style="background:#3CB371; color:#ffffff; padding:14px 34px; font-size:16px; 
                     font-weight:700; border-radius:12px; text-decoration:none; display:inline-block;
-                    box-shadow:0 4px 14px rgba(56,189,248,0.35); transition:0.3s;">
+                    box-shadow:0 4px 14px rgba(60,179,113,0.35); transition:0.3s;">
             🔑 Reset Password
           </a>
         </div>
@@ -160,12 +176,12 @@ const resetPassword = (values: IResetPassword) => {
 
     <!-- Footer -->
     <tr>
-      <td align="center" style="background:#0f172a; padding:26px 20px;">
-        <p style="margin:0; color:#64748b; font-size:13px;">
-          © ${new Date().getFullYear()} <strong style="color:#e2e8f0;">Just Breath</strong>. All rights reserved.
+      <td align="center" style="background:#f9f9f9; padding:26px 20px; border-top:1px solid #e6e6e6;">
+        <p style="margin:0; color:#777; font-size:13px;">
+          © ${new Date().getFullYear()} <strong>Just Breath</strong>. All rights reserved.
         </p>
-        <p style="margin:6px 0 0; color:#64748b; font-size:13px;">
-          Powered by <strong style="color:#38bdf8;">Just Breath API</strong> 💙
+        <p style="margin:6px 0 0; color:#777; font-size:13px;">
+          Powered by <strong style="color:#3CB371;">Just Breath API</strong> 💚
         </p>
       </td>
     </tr>
@@ -173,11 +189,10 @@ const resetPassword = (values: IResetPassword) => {
   </table>
 </body>
     `,
-  };
+  }
 
-  return data;
-};
-
+  return data
+}
 
 const resendOtp = (values: {
   email: string
@@ -271,7 +286,6 @@ const resendOtp = (values: {
 
   return data
 }
-
 
 const adminContactNotificationEmail = (payload: {
   name: string
@@ -450,7 +464,6 @@ const userContactConfirmationEmail = (payload: {
     `,
   }
 }
-
 
 const sendPaymentLinkEmail = ({
   data,
@@ -822,7 +835,7 @@ const sendAdminNewQuoteEmail = (quote: any, service: IService) => {
           <tr style="border-top:1px solid #e8e8e8;">
             <td style="padding:8px 0; color:#666;">Preferred Date & Time:</td>
             <td style="padding:8px 0; color:#222; text-align:right;">
-              ${new Date(quote.preferredDateTime).toLocaleString("en-US")}
+              ${new Date(quote.preferredDateTime).toLocaleString('en-US')}
             </td>
           </tr>
 
@@ -840,7 +853,7 @@ const sendAdminNewQuoteEmail = (quote: any, service: IService) => {
         <!-- Notes -->
         <div style="background:#f1f8f4; padding:15px 18px; border-radius:12px; border-left:4px solid #3CB371; margin-top:25px;">
           <p style="margin:0; color:#444; font-size:14px;">
-            💬 <strong>Customer Notes:</strong> ${quote.additionalNotes || "No additional notes available"}
+            💬 <strong>Customer Notes:</strong> ${quote.additionalNotes || 'No additional notes available'}
           </p>
         </div>
 
@@ -862,9 +875,8 @@ const sendAdminNewQuoteEmail = (quote: any, service: IService) => {
   </table>
 </body>
     `,
-  };
-};
-
+  }
+}
 
 export const emailTemplate = {
   createAccount,
@@ -875,5 +887,5 @@ export const emailTemplate = {
   sendPaymentLinkEmail,
   sendPaymentConfirmationEmail,
   sendAdminPaymentNotificationEmail,
-  sendAdminNewQuoteEmail
+  sendAdminNewQuoteEmail,
 }

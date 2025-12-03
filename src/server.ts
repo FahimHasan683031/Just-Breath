@@ -2,11 +2,11 @@ import colors from 'colors'
 import mongoose from 'mongoose'
 import { Server } from 'socket.io'
 import app from './app'
-import './cornJobs/subscriptionExpirationCron';
 import config from './config'
 import { errorLogger, logger } from './shared/logger'
 import { socketHelper } from './helpers/socketHelper'
-import { UserServices } from './app/modules/user/user.service'
+import { UserService } from './app/modules/user/user.service';
+
 
 
 
@@ -42,7 +42,7 @@ async function main() {
     })
 
     //create admin user
-    await UserServices.createAdmin()
+    await UserService.seedSuperAdmin()
 
     logger.info(colors.green('🍁 Server connected successfully'))
 

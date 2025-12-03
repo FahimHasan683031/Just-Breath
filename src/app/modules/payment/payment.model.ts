@@ -50,6 +50,6 @@ const PaymentSchema = new Schema<IPayment>(
 
 // Index for better search performance
 PaymentSchema.index({ email: 1, dateTime: -1 });
-PaymentSchema.index({ transactionId: 1 });
+
 
 export const Payment = model<IPayment>('Payment', PaymentSchema);

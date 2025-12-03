@@ -1,8 +1,6 @@
 export enum USER_ROLES {
+USER = 'user',
   ADMIN = 'admin',
-  APPLICANT = 'applicant',
-  RECRUITER = 'recruiter',
-  GUEST = 'guest',
 }
 
 export enum USER_STATUS {

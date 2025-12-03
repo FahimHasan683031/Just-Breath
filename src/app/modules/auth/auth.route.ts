@@ -1,77 +1,40 @@
-import express from 'express'
-import passport from 'passport'
-import { PassportAuthController } from './passport.auth/passport.auth.controller'
-import { CustomAuthController } from './custom.auth/custom.auth.controller'
-import validateRequest from '../../middleware/validateRequest'
-import { AuthValidations } from './auth.validation'
-import { USER_ROLES } from '../../../enum/user'
-import auth, { tempAuth } from '../../middleware/auth'
+import express from 'express';
+import { AuthController } from './auth.controller';
+import { AuthValidation } from './auth.validation';
+import auth from '../../middleware/auth';
+import { USER_ROLES } from '../../../enum/user';
+import validateRequest from '../../middleware/validateRequest';
+const router = express.Router();
 
-const router = express.Router()
-
-router.post(
-  '/signup',
-  validateRequest(AuthValidations.createUserZodSchema),
-  CustomAuthController.createUser,
-)
-router.post(
-  '/admin-login',
-  validateRequest(AuthValidations.loginZodSchema),
-  CustomAuthController.adminLogin,
-)
 router.post(
   '/login',
-  validateRequest(AuthValidations.loginZodSchema),
-  passport.authenticate('local', { session: false }),
-  PassportAuthController.login,
-)
-
-
-
-
-router.post(
-  '/verify-account',
-  validateRequest(AuthValidations.verifyAccountZodSchema),
-  CustomAuthController.verifyAccount,
-)
-
-router.post(
-  '/custom-login',
-  validateRequest(AuthValidations.loginZodSchema),
-  CustomAuthController.customLogin,
-)
+  validateRequest(AuthValidation.createLoginZodSchema),
+  AuthController.loginUser
+);
 
 router.post(
   '/forget-password',
-  validateRequest(AuthValidations.forgetPasswordZodSchema),
-  CustomAuthController.forgetPassword,
-)
-router.post(
-  '/reset-password',
-  validateRequest(AuthValidations.resetPasswordZodSchema),
-  CustomAuthController.resetPassword,
-)
+  validateRequest(AuthValidation.createForgetPasswordZodSchema),
+  AuthController.forgetPassword
+);
 
 router.post(
-  '/resend-otp',
-  tempAuth(
-    USER_ROLES.ADMIN,
-    USER_ROLES.GUEST,
-  ),
-  validateRequest(AuthValidations.resendOtpZodSchema),
-  CustomAuthController.resendOtp,
-)
+  '/verify-email',
+  validateRequest(AuthValidation.createVerifyEmailZodSchema),
+  AuthController.verifyEmail
+);
+
+router.post(
+  '/reset-password',
+  validateRequest(AuthValidation.createResetPasswordZodSchema),
+  AuthController.resetPassword
+);
 
 router.post(
   '/change-password',
-  auth(USER_ROLES.ADMIN, USER_ROLES.GUEST),
-  validateRequest(AuthValidations.changePasswordZodSchema),
-  CustomAuthController.changePassword,
-)
+  auth(USER_ROLES.ADMIN, USER_ROLES.USER),
+  validateRequest(AuthValidation.createChangePasswordZodSchema),
+  AuthController.changePassword
+);
 
-
-router.post('/refresh-token', CustomAuthController.getRefreshToken)
-
-
-
-export const AuthRoutes = router
+export const AuthRoutes = router;
