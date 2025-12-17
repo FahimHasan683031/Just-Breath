@@ -19,6 +19,7 @@ const createPayment = async (payload: Partial<IPayment>) => {
 // get payments
 const getPayments = async (query: Record<string, unknown>) => {
   const paymentQueryBuilder = new QueryBuilder(Payment.find(), query)
+    .search(['email', 'customerName',"transactionId"])
     .filter()
     .sort()
     .paginate();

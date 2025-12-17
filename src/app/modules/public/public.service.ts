@@ -82,17 +82,15 @@ const createContact = async (payload: IContact) => {
 
 const getAllContacts = async (query: Record<string, unknown>) => {
   const contactQueryBuilder = new QueryBuilder(Contact.find(), query)
-
-  contactQueryBuilder.paginate()
+    .search(['email', 'name'])
+    .filter()
+    .paginate()
 
   const result = await contactQueryBuilder.modelQuery.lean()
+  const paginateInfo = await contactQueryBuilder.getPaginationInfo()
 
-  // Get pagination info separately
-  const paginationResult = await contactQueryBuilder.getPaginationInfo()
-
-  // Return clean objects without circular references
   return {
-    meta: paginationResult,
+    meta: paginateInfo,
     result,
   }
 }

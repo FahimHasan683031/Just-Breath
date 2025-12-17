@@ -38,7 +38,7 @@ export const createCheckoutSession = async (quoteId: string) => {
         quantity: 1,
       },
     ],
-    success_url: `${config.stripe.frontendUrl}/payments/success?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${config.stripe.frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${config.stripe.frontendUrl}/payments/cancel`,
     metadata: {
       quote_id: String(quote._id),

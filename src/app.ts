@@ -18,9 +18,14 @@ app.use('/webhook',
 
 const allowedOrigins = [
   'https://goroqit.com',
-  'https://www.goroqit.com',   // add www version
-  'http://goroqit.com',        // optional if non-SSL
+  'https://www.goroqit.com',  
+  'http://goroqit.com',        
   'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002',
+  'http://localhost:3003',
+  'http://localhost:3004',
+  'http://localhost:3005',
   'http://10.10.7.45:3000'
 ];
 
